@@ -8,10 +8,10 @@
 end
 
 10.times do
-  User.create(
+  User.create!(
     email: Faker::Internet.email,
-    password: 'test',
-    password_confirmation: 'test'
+    password: 'testtest',
+    password_confirmation: 'testtest'
   )
 end
 
