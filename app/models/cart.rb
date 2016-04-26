@@ -4,12 +4,16 @@ class Cart < ActiveRecord::Base
   has_many :items, through: :line_items
 
   def total
-    total = 0
-    items.each {|item| total += item.price}
-    total
+    items.collect(&:price).reduce(:+)
   end
 
   def add_item(item_id)
-
+    cart_item = self.line_items.select { |lineitem| lineitem.item_id == item_id }.first
+    if cart_item
+      cart_item.quantity += 1
+      cart_item
+    else
+      LineItem.new(quantity: 1, cart_id: self.id, item_id: item_id)
+    end
   end
 end
