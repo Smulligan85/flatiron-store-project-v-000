@@ -5,12 +5,29 @@ class ApplicationController < ActionController::Base
   before_action :set_cart
 
   def set_cart
-    # if a user exists but not cart, do, set the cart!
-    if !current_user.nil? && current_user.current_cart.nil?
-      current_user.current_cart = current_user.carts.create!(user_id: current_user, status: "submitted")
+    if current_user && current_user.carts.find {|cart| cart.user_id == current_user.id}
+      current_user.current_cart = current_user.carts.find {|cart| cart.user_id == current_user.id}
+    elsif current_user 
+      current_user.current_cart = current_user.carts.create!(user_id: current_user)
     end
   end
 end
 
 
-# returns nil if there is no user, or there is a cart.
+      # def set_cart
+      #   #if the user exists, find their cart.
+      #   if current_user
+      #     user_cart = current_user.carts.find {|cart| cart.user_id == current_user.id}
+      #   end
+      #
+      #   #if the user exists and they have zero line items, set their cart to nil.
+      #   if current_user && user_cart && user_cart.line_items.count == 0
+      #     current_user.current_cart = nil
+      #     #if the user exists and they have a cart, set it to current_cart.
+      #   elsif current_user && user_cart
+      #     current_user.current_cart = user_cart
+      #     #if there is a user, set his cart.
+      #   elsif current_user
+      #     current_user.current_cart = current_user.carts.create!(user_id: current_user)
+      #   end
+      # end

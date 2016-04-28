@@ -7,6 +7,15 @@ class Cart < ActiveRecord::Base
     items.collect(&:price).reduce(:+)
   end
 
+  def line_items_total
+    total = Array.new
+
+    line_items.each do |line_item|
+      total << line_item.quantity * line_item.item.price
+    end
+    total.reduce(:+)
+  end
+
   def add_item(item_id)
     cart_item = self.line_items.select { |lineitem| lineitem.item_id == item_id }.first
     if cart_item

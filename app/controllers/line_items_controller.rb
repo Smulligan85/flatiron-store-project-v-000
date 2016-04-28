@@ -1,13 +1,13 @@
 class LineItemsController < ApplicationController
   def create
-    users_cart = set_cart
+    user_cart = current_user.current_cart
     item = Item.find(params[:item_id])
 
-    if users_cart.nil? 
-      redirect_to store_path
+    if current_user && !user_cart.nil?
+      user_cart.add_item(item.id).save
+      redirect_to cart_path(set_cart)
     else
-      users_cart.line_items << users_cart.add_item(item)
-      redirect_to cart_path(users_cart.id)
+      redirect_to store_path
     end
   end
 end
